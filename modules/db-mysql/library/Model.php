@@ -357,19 +357,29 @@ class Model
                     $cond = [];
                     $bind = [];
                     foreach($where as $key => $val){
-                        $scond = '`' . $key . '`';
-                        if(is_array($val)){
-                            if($val[0] === '__op'){
-                                $scond.= ' ' . $val[1] . ' ';
-                                $bind[$key] = $val[2];
+                        $q_used = false;
+                        
+                        if($key == 'q' && !is_array($val) && isset($this->q_field)){
+                            $val = $this->escape($val);
+                            $scond = '`' . $this->q_field . '` LIKE \'%' . $val . '%\'';
+                            $q_used = true;
+                        }
+                        
+                        if(!$q_used){
+                            $scond = '`' . $key . '`';
+                            if(is_array($val)){
+                                if($val[0] === '__op'){
+                                    $scond.= ' ' . $val[1] . ' ';
+                                    $bind[$key] = $val[2];
+                                }else{
+                                    $scond.= ' IN ';
+                                    $bind[$key] = $val;
+                                }
+                                $scond.= ':' . $key;
                             }else{
-                                $scond.= ' IN ';
+                                $scond.= ' = :' . $key;
                                 $bind[$key] = $val;
                             }
-                            $scond.= ':' . $key;
-                        }else{
-                            $scond.= ' = :' . $key;
-                            $bind[$key] = $val;
                         }
                         
                         $cond[] = $scond;
