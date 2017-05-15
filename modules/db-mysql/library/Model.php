@@ -175,30 +175,6 @@ class Model
         return mysqli_real_escape_string($this->getConn(), $str);
     }
     
-    private function filter($q, $total=12, $page=1){
-        if(!$this->q_field)
-            throw new Exception('Table is not filterable');
-        
-        $q = $this->escape($q);
-        
-        $page--;
-        $offset = $total * $page;
-        $sql = "SELECT *, LENGTH(:field) AS `strlen` FROM :table WHERE :field LIKE '%$q%' ORDER BY `strlen` LIMIT :limit OFFSET :offset";
-        $sql = $this->putField($sql, [
-            'field' => $this->q_field,
-            'table' => $this->getTable()
-        ]);
-        $sql = $this->putValue($sql, ['limit' => $total, 'offset' => $offset]);
-        
-        $result = $this->query($sql, 'read');
-        if(!$result)
-            return false;
-        
-        if($total === false)
-            return $result[0];
-        return $result;
-    }
-    
     private function get($where=null, $total=true, $page=false, $order=''){
         $sql = $this->putField('SELECT * FROM :table', ['table'=>$this->getTable()]);
         
