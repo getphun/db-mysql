@@ -318,6 +318,8 @@ class Model
         foreach($args as $arg => $val){
             if(is_string($val))
                 $val = "'" . $this->escape($val) . "'";
+            elseif(is_bool($val))
+                $val = $val ? 'TRUE' : 'FALSE';
             elseif(is_null($val))
                 $val = 'NULL';
             elseif(is_array($val)){
