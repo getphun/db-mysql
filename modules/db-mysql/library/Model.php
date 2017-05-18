@@ -13,6 +13,7 @@ class Model
 
     private static $models = [];
     private static $db_target;
+    private static $last_conn;
     
     public function __construct(){
         if(!self::$db_target){
@@ -104,6 +105,7 @@ class Model
     private function create($row){
         if(!$row)
             return false;
+        $row = (array)$row;
         
         $fields = array_keys($row);
         
@@ -239,6 +241,13 @@ class Model
         }
         
         return $this->query($sql, 'write');
+    }
+    
+    private function lastError(){
+        if(!$this->last_conn)
+            return;
+        
+        return $this->getConn( $this->last_conn )->error;
     }
     
     private function lastId($target='write'){
@@ -397,6 +406,7 @@ class Model
     
     private function query($sql, $target='read'){
         $this->last_query = $sql;
+        $this->last_conn  = $target;
         $conn = $this->getConn($target);
         $result = mysqli_query($conn, $sql);
         if(is_bool($result))
@@ -424,6 +434,7 @@ class Model
     private function set($row, $where=null){
         if(!$row)
             return false;
+        $row = (array)$row;
         
         $sql = 'UPDATE :table SET ';
         
