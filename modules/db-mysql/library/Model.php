@@ -190,11 +190,11 @@ class Model
         
         if($total === false){
             $sql.= ' LIMIT 1';
-        }elseif(is_integer($total)){
+        }elseif(is_numeric($total)){
             $sql.= ' LIMIT :limit';
             $offset = 0;
             
-            if(is_integer($page)){
+            if(is_numeric($page)){
                 $page--;
                 $offset = $page * $total;
                 $sql.= ' OFFSET :offset';
@@ -343,7 +343,7 @@ class Model
         
         $used_where = ['','bind' => []];
         
-        if(is_integer($where)){
+        if(is_numeric($where)){
             $used_where[0] = '`id` = :id';
             $used_where['bind'] = ['id' => $where];
         }elseif(is_string($where)){
