@@ -20,11 +20,15 @@ return [
     '__dependencies' => [
         'core'
     ],
+    '_server' => [
+        'MySQL 5.6.23 <' => 'DbMysql\\Library\\Server::software'
+    ],
     '_services' => [],
     '_autoload' => [
         'classes' => [
             'Model' => 'modules/db-mysql/library/Model.php',
-            'DbMysql\\Library\\Connector' => 'modules/db-mysql/library/Connector.php'
+            'DbMysql\\Library\\Connector' => 'modules/db-mysql/library/Connector.php',
+            'DbMysql\\Library\\Server'    => 'modules/db-mysql/library/Server.php'
         ],
         'files' => []
     ]
