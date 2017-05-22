@@ -21,7 +21,7 @@ return [
         'core'
     ],
     '_server' => [
-        'MySQL 5.6.23 <' => 'DbMysql\\Library\\Server::software'
+        'MySQL 5.6.23 =' => 'DbMysql\\Library\\Server::software'
     ],
     '_services' => [],
     '_autoload' => [
