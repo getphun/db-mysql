@@ -293,6 +293,10 @@ class Model
     }
     
     private function putField($sql, $args){
+        uksort($args, function($a,$b){
+            return strcasecmp($b, $a);
+        });
+        
         foreach($args as $arg => $val){
             if(is_string($val)){
                 $val = "`$val`";
@@ -315,6 +319,10 @@ class Model
     }
     
     private function putValue($sql, $args){
+        uksort($args, function($a,$b){
+            return strcasecmp($b, $a);
+        });
+        
         foreach($args as $arg => $val){
             if(is_string($val))
                 $val = "'" . $this->escape($val) . "'";
