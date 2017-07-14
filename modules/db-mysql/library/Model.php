@@ -385,7 +385,7 @@ class Model
                         }
                         
                         if(!$q_used){
-                            $scond = '`' . $key . '`';
+                            $scond = '`' . str_replace('.', '`.`', $key) . '`';
                             if(is_array($val)){
                                 if($val[0] === '__op'){
                                     $scond.= ' ' . $val[1] . ' ';
