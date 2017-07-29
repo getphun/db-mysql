@@ -396,8 +396,13 @@ class Model
                                 }
                                 $scond.= ':' . $key;
                             }else{
-                                $scond.= ' = :' . $key;
-                                $bind[$key] = $val;
+                                if(is_null($val)){
+                                    $scond.= ' IS :' . $key;
+                                    $bind[$key] = $val;
+                                }else{
+                                    $scond.= ' = :' . $key;
+                                    $bind[$key] = $val;
+                                }
                             }
                         }
                         
