@@ -303,7 +303,7 @@ class Model
                 if(strstr($val, '.'))
                     $val = str_replace('.', "`.`", $val);
             }elseif(is_array($val)){
-                $used_val = '';
+                $used_val = [];
                 foreach($val as $va){
                     $va = "`$va`";
                     if(strstr($va, '.'))
