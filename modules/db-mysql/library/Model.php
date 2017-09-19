@@ -224,6 +224,10 @@ class Model
         return $this->model->conns->$target;
     }
     
+    private function getQField(){
+        return $this->q_field ?? null;
+    }
+    
     private function getTable(){
         return $this->model->table;
     }
