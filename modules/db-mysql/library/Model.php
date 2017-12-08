@@ -339,6 +339,8 @@ class Model
                 foreach($val as $va){
                     if(is_string($va))
                         $va = "'" . $this->escape($va) . "'";
+                    elseif(is_bool($va))
+                        $va = $va ? 'TRUE' : 'FALSE';
                     elseif(is_null($va))
                         $va = 'NULL';
                     $used_val[] = $va;
