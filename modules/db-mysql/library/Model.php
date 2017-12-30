@@ -396,11 +396,16 @@ class Model
                                 if($val[0] === '__op'){
                                     $scond.= ' ' . $val[1] . ' ';
                                     $bind[$key] = $val[2];
+                                    $scond.= ':' . $key;
+                                }elseif($val[0] === '__between'){
+                                    $scond.= ' BETWEEN :' . $key . '___min AND :' . $key . '___max';
+                                    $bind[$key.'___min'] = $val[1];
+                                    $bind[$key.'___max'] = $val[2];
                                 }else{
                                     $scond.= ' IN ';
                                     $bind[$key] = $val;
+                                    $scond.= ':' . $key;
                                 }
-                                $scond.= ':' . $key;
                             }else{
                                 if(is_null($val)){
                                     $scond.= ' IS :' . $key;
