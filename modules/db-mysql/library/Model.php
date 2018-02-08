@@ -14,6 +14,7 @@ class Model
     private static $models = [];
     private static $db_target;
     private static $last_conn;
+    private $last_query;
     
     public function __construct(){
         if(!self::$db_target){
