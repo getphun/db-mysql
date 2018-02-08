@@ -27,7 +27,7 @@ class Model
         
         $model = (object)[
             'table' => '',
-            'conns' => self::$db_target
+            'conns' => clone self::$db_target
         ];
         
         $cls = get_class($this);
