@@ -329,7 +329,9 @@ class Model
         });
         
         foreach($args as $arg => $val){
-            if(is_string($val))
+            if(is_numeric($val))
+                $val = $this->escape($val);
+            elseif(is_string($val))
                 $val = "'" . $this->escape($val) . "'";
             elseif(is_bool($val))
                 $val = $val ? 'TRUE' : 'FALSE';
@@ -338,7 +340,9 @@ class Model
             elseif(is_array($val)){
                 $used_val = [];
                 foreach($val as $va){
-                    if(is_string($va))
+                    if(is_numeric($va))
+                        $va = $this->escape($va);
+                    elseif(is_string($va))
                         $va = "'" . $this->escape($va) . "'";
                     elseif(is_bool($va))
                         $va = $va ? 'TRUE' : 'FALSE';
