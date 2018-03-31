@@ -329,7 +329,7 @@ class Model
         });
         
         foreach($args as $arg => $val){
-            if(is_numeric($val))
+            if(is_numeric($val) && substr($val,0,1) != '0')
                 $val = $this->escape($val);
             elseif(is_string($val))
                 $val = "'" . $this->escape($val) . "'";
@@ -340,7 +340,7 @@ class Model
             elseif(is_array($val)){
                 $used_val = [];
                 foreach($val as $va){
-                    if(is_numeric($va))
+                    if(is_numeric($va) && substr($va,0,1) != '0')
                         $va = $this->escape($va);
                     elseif(is_string($va))
                         $va = "'" . $this->escape($va) . "'";
