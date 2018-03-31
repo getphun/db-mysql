@@ -397,6 +397,10 @@ class Model
                         
                         if(!$q_used){
                             $scond = '`' . str_replace('.', '`.`', $key) . '`';
+                            
+                            if(is_array($val) && !$val)
+                                $val = null;
+                            
                             if(is_array($val)){
                                 if($val[0] === '__op'){
                                     $scond.= ' ' . $val[1] . ' ';
