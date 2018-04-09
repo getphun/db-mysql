@@ -391,7 +391,16 @@ class Model
                         
                         if($key == 'q' && !is_array($val) && isset($this->q_field)){
                             $val = $this->escape($val);
-                            $scond = '`' . $this->q_field . '` LIKE \'%' . $val . '%\'';
+
+                            if(is_array($this->q_field)){
+                                $sconds = [];
+                                foreach($this->q_field as $qf)
+                                    $sconds[] = '`' . $qf . '` LIKE \'%' . $val . '%\'';
+                                $scond = '(' . implode(' OR ', $sconds) . ')';
+                            }else{
+                                $scond = '`' . $this->q_field . '` LIKE \'%' . $val . '%\'';
+                            }
+
                             $q_used = true;
                         }
                         
