@@ -358,7 +358,7 @@ class Model
         return $sql;
     }
     
-    private function putWhere($sql, $where){
+    private function putWhere($sql, $where, $rel='AND'){
         if(!$where)
             return $sql;
         
@@ -387,8 +387,6 @@ class Model
                     $cond = [];
                     $bind = [];
                     foreach($where as $key => $val){
-                        $q_used = false;
-                        
                         if($key == 'q' && !is_array($val) && isset($this->q_field)){
                             $val = $this->escape($val);
 
@@ -401,44 +399,49 @@ class Model
                                 $scond = '`' . $this->q_field . '` LIKE \'%' . $val . '%\'';
                             }
 
-                            $q_used = true;
+                            $cond[] = $scond;
+                            continue;
+                        }
+
+                        if($key == '$or' && is_array($val)){
+                            $scond = $this->putWhere('( :where )', $val, 'OR');
+                            $cond[] = $scond;
+                            continue;
                         }
                         
-                        if(!$q_used){
-                            $scond = '`' . str_replace('.', '`.`', $key) . '`';
-                            
-                            if(is_array($val) && !$val)
-                                $val = null;
-                            
-                            if(is_array($val)){
-                                if($val[0] === '__op'){
-                                    $scond.= ' ' . $val[1] . ' ';
-                                    $bind[$key] = $val[2];
-                                    $scond.= ':' . $key;
-                                }elseif($val[0] === '__between'){
-                                    $scond.= ' BETWEEN :' . $key . '___min AND :' . $key . '___max';
-                                    $bind[$key.'___min'] = $val[1];
-                                    $bind[$key.'___max'] = $val[2];
-                                }else{
-                                    $scond.= ' IN ';
-                                    $bind[$key] = $val;
-                                    $scond.= ':' . $key;
-                                }
+                        $scond = '`' . str_replace('.', '`.`', $key) . '`';
+                        
+                        if(is_array($val) && !$val)
+                            $val = null;
+                        
+                        if(is_array($val)){
+                            if($val[0] === '__op'){
+                                $scond.= ' ' . $val[1] . ' ';
+                                $bind[$key] = $val[2];
+                                $scond.= ':' . $key;
+                            }elseif($val[0] === '__between'){
+                                $scond.= ' BETWEEN :' . $key . '___min AND :' . $key . '___max';
+                                $bind[$key.'___min'] = $val[1];
+                                $bind[$key.'___max'] = $val[2];
                             }else{
-                                if(is_null($val)){
-                                    $scond.= ' IS :' . $key;
-                                    $bind[$key] = $val;
-                                }else{
-                                    $scond.= ' = :' . $key;
-                                    $bind[$key] = $val;
-                                }
+                                $scond.= ' IN ';
+                                $bind[$key] = $val;
+                                $scond.= ':' . $key;
+                            }
+                        }else{
+                            if(is_null($val)){
+                                $scond.= ' IS :' . $key;
+                                $bind[$key] = $val;
+                            }else{
+                                $scond.= ' = :' . $key;
+                                $bind[$key] = $val;
                             }
                         }
-                        
+
                         $cond[] = $scond;
                     }
                     
-                    $used_where[0] = implode(' AND ', $cond);
+                    $used_where[0] = implode(' ' . $rel . ' ', $cond);
                     $used_where['bind'] = $bind;
                 }
             }
