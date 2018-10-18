@@ -224,6 +224,12 @@ class Model
     private function getConnName($target='read'){
         return $this->model->conns->$target;
     }
+
+    private function getDBName($target='read'){
+        $conn = $this->getConnName($target);
+        $info = Connector::getConnInfo($conn);
+        return $info['dbname'];
+    }
     
     private function getQField(){
         return $this->q_field ?? null;
@@ -387,7 +393,8 @@ class Model
                     $cond = [];
                     $bind = [];
                     foreach($where as $key => $val){
-                        if($key == 'q' && !is_array($val) && isset($this->q_field)){
+                        $r_key = trim($key, '-');
+                        if($r_key == 'q' && !is_array($val) && isset($this->q_field)){
                             $val = $this->escape($val);
 
                             if(is_array($this->q_field)){
@@ -403,13 +410,18 @@ class Model
                             continue;
                         }
 
-                        if($key == '$or' && is_array($val)){
+                        if($r_key == '$or' && is_array($val)){
                             $scond = $this->putWhere('( :where )', $val, 'OR');
                             $cond[] = $scond;
                             continue;
                         }
                         
-                        $scond = '`' . str_replace('.', '`.`', $key) . '`';
+                        if(false !== strstr($r_key, '(')){
+                            $scond = $r_key;
+                            $key = md5($r_key);
+                        }else{
+                            $scond = '`' . str_replace('.', '`.`', $r_key) . '`';
+                        }
                         
                         if(is_array($val) && !$val)
                             $val = null;
