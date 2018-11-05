@@ -42,7 +42,7 @@ class Connector{
         if(mysqli_connect_error())
             throw new \Exception('Database connection `' . $name . '` fail');
         
-        mysqli_set_charset($conn, 'utf8');
+        mysqli_set_charset($conn, 'utf8mb4');
         
         self::$conns[$name] = $conn;
         return self::$conns[$name];
