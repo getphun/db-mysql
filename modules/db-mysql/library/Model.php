@@ -342,9 +342,12 @@ class Model
         });
         
         foreach($args as $arg => $val){
-            if(is_numeric($val) && substr($val,0,1) != '0')
-                $val = $this->escape($val);
-            elseif(is_string($val))
+            if(is_numeric($val) && substr($val,0,1) != '0'){
+                if(strlen($val) > 10)
+                    $val = "'" . $this->escape($val) . "'";
+                else
+                    $val = $this->escape($val);
+            }elseif(is_string($val))
                 $val = "'" . $this->escape($val) . "'";
             elseif(is_bool($val))
                 $val = $val ? 'TRUE' : 'FALSE';
