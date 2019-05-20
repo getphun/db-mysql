@@ -2,13 +2,13 @@
 /**
  * db-mysql config file
  * @package db-mysql
- * @version 0.0.1
+ * @version 0.0.2
  * @upgrade true
  */
 
 return [
     '__name' => 'db-mysql',
-    '__version' => '0.0.1',
+    '__version' => '0.0.2',
     '__git' => 'https://github.com/getphun/db-mysql',
     '__files' => [
         'modules/db-mysql' => [

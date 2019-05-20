@@ -103,14 +103,18 @@ class Model
         return array_column($result, 'count', 'key');
     }
     
-    private function create($row){
+    private function create($row, $ignore=false){
         if(!$row)
             return false;
         $row = (array)$row;
         
         $fields = array_keys($row);
+
+        $sql = 'INSERT';
+        if($ignore)
+            $sql = 'INSERT IGNORE';
         
-        $sql = $this->putField('INSERT INTO :table (:fields) VALUES :values', [
+        $sql = $this->putField($sql . ' INTO :table (:fields) VALUES :values', [
             'table'  => $this->getTable(),
             'fields' => $fields
         ]);
@@ -123,7 +127,7 @@ class Model
         return $this->lastId();
     }
     
-    private function createMany($rows){
+    private function createMany($rows, $ignore=false){
         if(!$rows)
             return false;
         
@@ -135,7 +139,10 @@ class Model
             }
         }
         
-        $sql = $this->putField('INSERT INTO :table (:fields) VALUES ', [
+        $sql = 'INSERT';
+        if($ignore)
+            $sql = 'INSERT IGNORE';
+        $sql = $this->putField($sql . ' INTO :table (:fields) VALUES ', [
             'table' => $this->getTable(),
             'fields'=> $fields
         ]);
